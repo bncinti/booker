@@ -1,0 +1,274 @@
+mysql
+mysqld
+
+mysql --version
+
+mysql -u root
+
+show databases;
+
+use mysql
+
+show tables;
+
+desc user;
+
+select User from user;
+
+select User, Host from user;
+
+create database dbnev;
+
+select User, Host, Password from user;
+
+start transaction;
+
+Táblázat felépítése
+describe tablanev;
+
+xampp-mysql-bi
+
+mysql -u root
+
+select @@tx_isolation;
+
+set transaction isolation level read uncommitted;
+
+lock table dolgozok read;    ezután megtekinthető, de nem írható
+lock table dolgozok write;   megtekinteni se lehet
+
+unlock table;
+
+rollback to [savepoint];
+
+
+
+2021.10.12
+
+izolációs szintek
+
+session
+set global transaction isolation level     új
+set session transaction isolation level    aktuális
+set transaction isolation level            egyetlen selectre vonatkozik
+
+create user tomi@localhost;
+select User,Host from user;
+select User,Host,Password from user;
+
+set password for tomi@localhost = password('titok');
+
+set password for tomi@localhost = '';
+
+alter user tomi@localhost account lock;
+alter user tomi@localhost account unlock;
+
+Batch fájl írása
+-----mysql.bat-----
+@echo off
+set mysql=c:\xampp\mysql\bin\mysql.exe%mysql%
+
+2021.11.09
+
+___Grant jogok___
+
+grant all privileges on *.* to admin@localhost;
+
+grant all privileges on *.* to 'admin@localhost' identified by 'titok' with grant option;
+
+
+
+grant all privileges on *.* to fonok@localhost identified '' with grant option;
+
+
+___Importálás___
+
+set PATH="%PATH%;c:/xampp/mysql/bin"
+mysql -u root < csali.sql
+
+___Exportálás___
+
+mysqldump dbnev > dbnev.sql
+
+2021.11.23
+SQL Optimalizálás
+
+DOGA köv hét kedd 11.30
+1, melyik utasítással hozhatunk létre indexet
+create unique index
+
+2, melyik utasítással hozhatunk létre szöveges kereséshez indexet
+create fulltext index
+
+3, melyik index típus
+elsődleges kulcs
+
+4, melyik index típus
+egyedi index
+
+5, melyik SQL utasítással hozhatok létre MariaDB szerveren egy peti nevű felhasználót
+create user peti@localhost;
+
+6, hogyan állíthatok be jelszót a peti felhasználó számára
+set password for peti@localhost = password('titok');
+
+7, hogyan adhatok minden jogot a karo nevű adatbázis minden táblájára peti számára
+grant all privileges on karo.* to peti@localhost;
+
+8, melyik utasítással vehetek el jogot a MariaDB szerveren
+revoke
+
+9, melyik utasítással adhatok jogot MariaDB szerveren
+grant
+
+10, melyik utasítással adhatok peti számára select jogota peti nevű adatbázisra MariaDB szerveren
+grant select on peti.* to peti@localhost;
+
+11, mire való az index
+gyorsabbá teheti az SQL lekérdezést
+
+12, melyik jelöl index típust MariaDB adatbázisban
+unique
+
+13, melyik jelöl index típust MariaDB adatbázisban
+fulltext
+
+14, melyik jelöl index típust MariaDB adatbázisban
+spatial
+
+15, melyik helyes szintaktikailag indexlétrehozó utasítás
+create index a on dolgozok(fizetes);
+
+16, melyik helyes index törlő utasítás
+drop index be on dolgozok;
+
+17, melyik indextárolási típus
+BTREE
+
+18, mit csinál az explain utasítás MariaDB SQL utasításaként
+analizálja a futó SQL utasítást
+
+
+___Explain___
+
+explain select * from dolgozok where telepules="Szolnok"; (mindegyiket kiadja)
+
+select * from dolgozok where telepules="Szolnok"; (csak ahol a telepules a megadott)
+
+create index tel_index on dolgozok(telepules);
+
+explain select* from dolgozok where telepules="Szolnok";
+
+
+2021.11.30
+
+PHP MariaDB 
+
+
+MySQL driver (MariaDB)
+
+___index.php___
+phpinfo();
+
+futtatás: php -S localhost:8000 -t .
+
+grant all privileges on kekzrt.* to kekzrt@localhost identified by 'titok';
+
+php változók 
+$num1 = 35
+$name = 'János' 
+
+
+____2021.12.14____
+utolsó dolgozat:2022.01.11
+
+lesz egy adatbázis, egy tábla és néhány lekérés
+
+XAMPP
+MariaDB
+
+
+leker/
+   |-config.php
+   |-mariadb.php
+   |-database.php
+   |-index.php
+
+configban
+<?php
+
+$db['host'] = 'localhost';
+$db['user'] = 'leker';
+$db['pass'] = 'titok';
+$db['name'] = 'leker';
+
+lekerben
+grant all privileges on leker.* to leker@localhost identified by 'titok';
+
+create database leker character set 'utf8' collate utf8_hungarian_ci;
+
+mariadbben
+<?php
+
+include_once('config.php');
+
+
+function connectDb() {
+    global $db;
+    $con = mysqli_connect(
+    $db['host'],
+    $db['user'],
+    $db['pass'],
+    $db['name'],
+    );
+    if(!$con){
+        die('A kapcsolódás sikertelen');
+    }
+}
+connectDb();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
